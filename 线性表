@@ -14,32 +14,32 @@
 #define Length 21					//长度定为21，是为了要存放一个“\0”
 #define Eof '\0'					//定义一个结束字符
 
-int GetLength(int * );				//获取数组中有效数的长度
-void WriteNum(int * ,int );			//写入有效个数据
-void PrintArr(int * );				//打印有效数据
-int JudgeEmpty(int * );				//判断是否为空
-void FInsertNum(int * , int ,int );	//在相应位置前插入数字
-void BInsertNum(int * , int , int );//在相应位置后插入数字
-void DeleteNum(int * , int );		//删除相应位置的数字
-void SortArr(int * );				//对线性表进行排序(冒泡排序)
+int GetLength(int * );					//获取数组中有效数的长度
+void WriteNum(int * ,int );				//写入有效个数据
+void PrintArr(int * );					//打印有效数据
+int JudgeEmpty(int * );					//判断是否为空
+void FInsertNum(int * , int ,int );			//在相应位置前插入数字
+void BInsertNum(int * , int , int );			//在相应位置后插入数字
+void DeleteNum(int * , int );				//删除相应位置的数字
+void SortArr(int * );					//对线性表进行排序(冒泡排序)
 
 
 int main()
 {
-	int arr[Length] = {0};			//初始化一个数组
-
+	int arr[Length] = {0};				//初始化一个数组
+	
 	int num = 0;					//定义一个想要生成线性表的长度								
 
 	printf("请输入生成线性表的长度(小于20)：");
-	scanf_s("%d", &num);			//输入想要生成的长度值
+	scanf_s("%d", &num);				//输入想要生成的长度值
 
 	WriteNum(arr, num);				//向线性表中存数
 	PrintArr(arr);					//输出线性表中的有效数据
-
-	FInsertNum(arr, 3, 78);			//往线性表中第三个数上增加一个前驱结点
+	
+	FInsertNum(arr, 3, 78);				//往线性表中第三个数上增加一个前驱结点
 	PrintArr(arr);					//输出线性表中的有效数据
 
-	BInsertNum(arr,0,43);			//往线性表中第二个数上增加一个后继结点
+	BInsertNum(arr,0,43);				//往线性表中第二个数上增加一个后继结点
 	PrintArr(arr);					//输出线性表中的有效数据
 
 	SortArr(arr);					//用冒泡排序法对线性表进行排序
@@ -53,159 +53,159 @@ int main()
 
 void SortArr(int* temp)										//冒泡排序函数
 {
-	int i = 0;												//定义一个用于表示循环次数的变量
-	int j = 0;												//定义一个用于表示数组下标的变量
-	int t = 0;												//定义一个用于交换的中间变量
+	int i = 0;										//定义一个用于表示循环次数的变量
+	int j = 0;										//定义一个用于表示数组下标的变量
+	int t = 0;										//定义一个用于交换的中间变量
 
 	if (JudgeEmpty(temp) != 1)								//判断线性标是否为空
 	{
-		for (i = 0; i < GetLength(temp)-1; i++)				//定义排序需要循环的次数
+		for (i = 0; i < GetLength(temp)-1; i++)						//定义排序需要循环的次数
 		{
-			for (j = 0; j < GetLength(temp) - i - 1; j++)	//从前往后定义下标范围，每进行一轮排序最后一位置就舍去，因为已经得出了最大/最小值并已经放在了最后一个位置上了
+			for (j = 0; j < GetLength(temp) - i - 1; j++)				//从前往后定义下标范围，每进行一轮排序最后一位置就舍去，因为已经得出了最大/最小值并已经放在了最后一个位置上了
 			{
 				if (temp[j] > temp[j + 1])					//把前一个数与后一个数进行比较（这里可以选择数字从大到小/从小到大）
-				{											//把前一个数与后一个数进行交换
-					t = temp[j];							//把前一个数赋给中间变量
+				{								//把前一个数与后一个数进行交换
+					t = temp[j];						//把前一个数赋给中间变量
 					temp[j] = temp[j + 1];					//把后一个数赋给钱一个数
-					temp[j + 1] = t;						//把之前存在中间变量中的前一个数的值赋给后一个数
+					temp[j + 1] = t;					//把之前存在中间变量中的前一个数的值赋给后一个数
 				}
 			}
 		}
 
 		printf("排序成功!\n");
 
-		return;												//结束函数
+		return;										//结束函数
 	}
 
 	printf("排序失败!\n");
 }
 
-void DeleteNum(int * temp, int local)					//删除函数
+void DeleteNum(int * temp, int local)								//删除函数
 {
-	int i = 0;											//定义一个用于循环的变量
+	int i = 0;										//定义一个用于循环的变量
 
-	if (JudgeEmpty(temp) != 1)							//判断线性表是否为空
+	if (JudgeEmpty(temp) != 1)								//判断线性表是否为空
 	{
-		for (i = local - 1; i < GetLength(temp)-1; i++)	//从想要删除的位置开始到线性表最后一个有效数值的位置
-		{												//从后往前采用覆盖的方法
-			temp[i] = temp[i + 1];						//把想要删除的对应位置上的值用后一个值进行覆盖
+		for (i = local - 1; i < GetLength(temp)-1; i++)					//从想要删除的位置开始到线性表最后一个有效数值的位置
+		{										//从后往前采用覆盖的方法
+			temp[i] = temp[i + 1];							//把想要删除的对应位置上的值用后一个值进行覆盖
 		}
 
-		temp[GetLength(temp)-1] = Eof;					//在原线性表的最后一个有效数字的前一个位置上赋上一个结束字符
+		temp[GetLength(temp)-1] = Eof;							//在原线性表的最后一个有效数字的前一个位置上赋上一个结束字符
 
 		printf("删除成功!\n");
 
-		return;											//结束函数
+		return;										//结束函数
 	}
 
 	printf("删除失败!\n");
 }
 
-void BInsertNum(int* temp, int local, int n)				//后续插入函数
+void BInsertNum(int* temp, int local, int n)							//后续插入函数
 {
-	int i = 0;												//定义一个用于循环的函数
+	int i = 0;										//定义一个用于循环的函数
 
 	/*
 		后继插入规范：从线性表第一个数之前一个位置之后（相当于第一个数之前的位置）
 					  到最后一个之后的位置都为后继插入的有效位置
 	*/
 
-	if (GetLength(temp) < 20 && local <= GetLength(temp))	//判断当前线性表是否已满并且插入的位置是否符合后继插入的规范
+	if (GetLength(temp) < 20 && local <= GetLength(temp))					//判断当前线性表是否已满并且插入的位置是否符合后继插入的规范
 	{
-		for (i = GetLength(temp)-1; i > local-1; i--)		//把数值从后到想要插入位置的后一位依次向后移动，腾出空间
+		for (i = GetLength(temp)-1; i > local-1; i--)					//把数值从后到想要插入位置的后一位依次向后移动，腾出空间
 		{
 			temp[i + 1] = temp[i];							//把前一个位置的值赋给后一个位置
 		}
 
-		temp[local] = n;									//给腾出的位置赋值
+		temp[local] = n;								//给腾出的位置赋值
 
-		temp[GetLength(temp)] = Eof;						//在线性表的最后插入一个结束字符，以便输出
+		temp[GetLength(temp)] = Eof;							//在线性表的最后插入一个结束字符，以便输出
 
 		printf("后继插入成功!\n");
 
-		return;												//结束函数
+		return;										//结束函数
 	}
 
 	printf("后继插入失败!\n");
 }
 
-void FInsertNum(int * temp, int local, int n)				//前驱插入函数
+void FInsertNum(int * temp, int local, int n)							//前驱插入函数
 {
-	int i = 0;												//定义用于循环的变量
+	int i = 0;										//定义用于循环的变量
 
 	/*
 		前驱插入的规范：从线性表第一个数值位置之前到最后一个数值位数的后一位之前
 						（相当于在最后一位的后面插入数值）都为前驱插入的有效位置
 	*/
 
-	if ( GetLength(temp) < 20 && local <= GetLength(temp)+1)//判断当前线性表是否已满并且插入的位置是否符合前驱插入的规范
+	if ( GetLength(temp) < 20 && local <= GetLength(temp)+1)				//判断当前线性表是否已满并且插入的位置是否符合前驱插入的规范
 	{
-		for (i = GetLength(temp)-1; i >= local-1; i--)		//把数值位置从后到想要插入的那个位置的数值一次往后移动一位，腾出位置
+		for (i = GetLength(temp)-1; i >= local-1; i--)					//把数值位置从后到想要插入的那个位置的数值一次往后移动一位，腾出位置
 		{													//如果是在最后一位的后一位插入则线性表不会移动（循环不会满足条件）
 			temp[i + 1] = temp[i];							//把前一个位置的数值赋给后一个位置
 		}
 
 		temp[local - 1] = n;								//在腾出的位置上插入想要的数值
 
-		temp[GetLength(temp)] = Eof;						//在线性表最后插入结束字符以便输出
+		temp[GetLength(temp)] = Eof;							//在线性表最后插入结束字符以便输出
 
 		printf("前驱插入成功!\n");
 
-		return;												//结束函数
+		return;										//结束函数
 	}
 
 	printf("前驱插入失败!\n");
 }
 
-void PrintArr(int* temp)					//打印线性表函数
+void PrintArr(int* temp)									//打印线性表函数
 {
-	int i = 0;								//定于一个用于循环的变量
+	int i = 0;										//定于一个用于循环的变量
 
-	while (temp[i] != '\0')					//判断线性表中第i的位置是否为结束符，如果是则停止循环
+	while (temp[i] != '\0')									//判断线性表中第i的位置是否为结束符，如果是则停止循环
 	{
-		printf("%d\t",temp[i]);				//如果不是则把这个位置上的数值输出
-		i++;								//对i进行累加
+		printf("%d\t",temp[i]);								//如果不是则把这个位置上的数值输出
+		i++;										//对i进行累加
 	}
 
-	printf("\n");							//换行以便后面的输出
+	printf("\n");										//换行以便后面的输出
 }
 
-int GetLength(int * temp)					//获取线性表长度的函数
+int GetLength(int * temp)									//获取线性表长度的函数
 {
-	int length = 0;							//设置一个存放长度的变量
-	int i = 0;								//设置一个用于循环并且可以表示线性表位置的变量
+	int length = 0;										//设置一个存放长度的变量
+	int i = 0;										//设置一个用于循环并且可以表示线性表位置的变量
 
-	for (; temp[i] != '\0' ; i++);			//循环判断线性表有效数值的个数，遇到结束字符停止循环
+	for (; temp[i] != '\0' ; i++);								//循环判断线性表有效数值的个数，遇到结束字符停止循环
 
-	length = i;								//把最后结束符的位置赋给length表示									
-											//线性表的有效位数的长度，因为线性表第一个数是从0开始的
-	return length;							//返回线性表的长度
+	length = i;										//把最后结束符的位置赋给length表示									
+												//线性表的有效位数的长度，因为线性表第一个数是从0开始的
+	return length;										//返回线性表的长度
 }
 
-int JudgeEmpty(int * temp)					//判断线性表是否为空的函数
+int JudgeEmpty(int * temp)									//判断线性表是否为空的函数
 {
-	if (temp[0] == '\0')					//首先判断线性表第一个位置是否为空
-	{										//如果为空则该线性表为空表，不为空则继续判断																
-		return 1;							//返回数值1
+	if (temp[0] == '\0')									//首先判断线性表第一个位置是否为空
+	{											//如果为空则该线性表为空表，不为空则继续判断																
+		return 1;									//返回数值1
 	}
-	else if(temp[Length] == '\0')			//如果线性表的最后一位为结束字符则该表已满
+	else if(temp[Length] == '\0')								//如果线性表的最后一位为结束字符则该表已满
 	{
 		printf("该线性表已满！\n");
-		return 2;							//返回数值2
+		return 2;									//返回数值2
 	}
 
-	return 0;								//如果线性表既不为空也不为满则返回0
+	return 0;										//如果线性表既不为空也不为满则返回0
 }
 
-void WriteNum(int * temp , int n)			//线性表写入函数
+void WriteNum(int * temp , int n)								//线性表写入函数
 {
-	int i = 0;								//定义一个用于循环的数值
+	int i = 0;										//定义一个用于循环的数值
 
-	for (; i < n ; i++)						//向线性表0~n-1的位置写入数值
+	for (; i < n ; i++)									//向线性表0~n-1的位置写入数值
 	{
 		printf("请输入第%d个数字：",i+1);
-		scanf_s("%d",temp+i);				//往相应位置上填入数值，此处使用了地址偏移
+		scanf_s("%d",temp+i);								//往相应位置上填入数值，此处使用了地址偏移
 	}
 
-	temp[n] = Eof;							//向线性表中的第n个位置上插入一个结束字符
+	temp[n] = Eof;										//向线性表中的第n个位置上插入一个结束字符
 }
