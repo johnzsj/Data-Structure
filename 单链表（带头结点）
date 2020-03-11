@@ -13,7 +13,7 @@ typedef struct Data										//定义一个结构体
 	int data = 0;										//结构体中定义一个数据元素
 	struct Data * Next;									//定义一个结构体指针指向下一个结构体
 }Data,*Pdata;											//运用typedef可以宏定义数据结构类型
-															                  //Date用于表示结构体类型，Pdata用于表示结构体指针类型
+												//Date用于表示结构体类型，Pdata用于表示结构体指针类型
 Pdata CreatList(int );									      	//创建链表函数
 void TravelList(Pdata );								      	//遍历链表函数
 bool EmptyList(Pdata );										//判断链表是否为空的函数
@@ -223,7 +223,7 @@ int LengthList(Pdata temp)								//判断链表长度函数
 
 	while (t->Next != NULL)								//设置循环终止条件：结点中的链表指针元素所指向的空间不为空
 	{
-		length++;													          //如果满足条件累加长度变量
+		length++;								//如果满足条件累加长度变量
 		t = t->Next;								//使t指针指向后一个结点
 	}
 
@@ -233,7 +233,7 @@ int LengthList(Pdata temp)								//判断链表长度函数
 bool EmptyList(Pdata temp)								//判断链表是否为空函数
 {
 	if (temp->Next == NULL)								//如果头结点中的链表指针元素所指向的空间不为空
-	{																              //则返回true，反之返回false
+	{										//则返回true，反之返回false
 		return true;
 	}
 	else
@@ -250,7 +250,7 @@ void TravelList(Pdata temp)								//遍历链表函数
 	{
 		printf("此链表为空!!!\n");
 
-		return;														         //为空就结束函数
+		return;									//为空就结束函数
 	}
 	else
 	{
