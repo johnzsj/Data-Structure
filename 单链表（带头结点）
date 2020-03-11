@@ -1,0 +1,306 @@
+/*
+	本程序演示的是单链表的是实现方式以及对其的一些操作实现，所以程序就尽可能的简单。
+	在这个程序中演示的是带头结点的单链表，不带头结点的见第二个源文件
+
+	后继结点和前驱结点的的插入规则我在线性表中提到过，后面就不再具体叙述了
+*/
+
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef struct Data											        //定义一个结构体
+{						
+	int data = 0;										          	  //结构体中定义一个数据元素
+	struct Data * Next;										        //定义一个结构体指针指向下一个结构体
+}Data,*Pdata;												            //运用typedef可以宏定义数据结构类型
+															                  //Date用于表示结构体类型，Pdata用于表示结构体指针类型
+Pdata CreatList(int );									      	//创建链表函数
+void TravelList(Pdata );								      	//遍历链表函数
+bool EmptyList(Pdata );										      //判断链表是否为空的函数
+int LengthList(Pdata );										      //获取链表长度的函数
+void FInsertList(Pdata , int , int );						//前驱插入函数
+void BInsertList(Pdata , int, int);							//后继插入函数
+void DeletaList(Pdata , int );								  //删除链表对应元素函数
+void SortList(Pdata );										      //链表元素排序函数
+void DistoryList(Pdata );								      	//销毁链表函数
+
+int main()
+{
+	int length = 0;											          //设置生成链表的变量
+
+	Pdata pHead = NULL;										        //设置头指针
+
+	printf("请输入你想生成的链表长度：");
+	scanf_s("%d",&length);									      //输入链表的长度（测试时我输入的为5）
+  
+	pHead = CreatList(length);							    	//通过创建链表的函数创建一张指定长度的链表
+
+	TravelList(pHead);									        	//遍历输出整张链表
+
+	printf("此链表的长度为:%d\n",LengthList(pHead));		//打印链表的长度
+
+	FInsertList(pHead,6,57);								          //在链表的第六个位置插入一个前驱结点值为57
+
+	TravelList(pHead);									            	//遍历输出整张链表
+
+	BInsertList(pHead, 0, 68);							        	//在链表的第0个位置插入一个后继结点值为68
+
+	TravelList(pHead);										            //遍历输出整张链表
+
+	DeletaList(pHead,2);								            	//删除链表中第二个结点
+
+	TravelList(pHead);									          	  //遍历输出整张链表
+
+	SortList(pHead);										              //对链表进行排序
+
+	TravelList(pHead);										            //遍历输出整张链表
+
+	DistoryList(pHead);										            //销毁整张表
+
+	if (EmptyList(pHead))									            //判断链表是否成功销毁
+	{
+		printf("链表为空!!\n");
+	}
+	else
+	{
+		printf("链表还存在!!\n");
+	}
+
+	return 0;
+}
+
+void DistoryList(Pdata temp)									  	//链表销毁函数
+{
+	if (!EmptyList(temp))											     //判断链表是否为空
+	{
+		Pdata t = temp->Next;										    //定义一个链表指针指向链表的第一个数据存储的结点（头节点的后一个结点）
+
+		while (t != NULL)											      //判断t所指向的结点是否为空
+		{
+			temp->Next = t->Next;								    	//如果不为空，使头结点的链表指针元素指向t所指向结点的后一个结点
+			free(t);											        	  //释放t所指向的结点
+			t = temp->Next;										      	//使t再次指向头结点的后一个结点										
+		}
+
+		printf("销毁成功!!!\n");
+	}
+	else
+	{
+		printf("链表原本就为空，不需要销毁!!!\n");
+	}
+}
+
+void SortList(Pdata temp)											//链表排序函数（冒泡排序）
+{   
+	int i = 0;														      //定义用于循环的变量
+	int t = 0;														      //定义存放结构体数据元素的临时变量
+	int j = 0;														      //定义用于循环的变量
+
+	for (i = 0; i < LengthList(temp) - 1; i++)						//循环需要循环的周期数
+	{
+		Pdata f = temp->Next;									            	//定义一个新的结构体指针指向第一个有效结点
+		Pdata b = temp->Next->Next;								        	//定义一个新的结构体指针指向第二个有效结点
+		
+		for (j = 0; j < LengthList(temp) - 1 - i; j++)			//循环在每个周期内需要进行的判断次数
+		{
+			if (f->data > b->data)									          //可根据需求定义从大到小/从小到大排序
+			{
+				t = f->data;										                //把f指针指向的结点中的数据元素赋给临时变量t
+				f->data = b->data;									            //把b指针指向的结点中的数据元素赋给f指针指向的结点中的数据元素变量
+				b->data = t;										                //把t中存放的数值赋给b指针指向的结点中的数据元素变量
+			}
+
+			f = f->Next;											                //把f指针后移一位，使其指向原指向结点的后一个结点
+			b = b->Next;											                //把b 指针后移一位，使其指向原指向结点的后一个结点
+		}
+	}
+
+	printf("排序成功!!!\n");
+}
+
+void DeletaList(Pdata temp, int local)								//链表删除函数
+{
+	int i = 0;														              //定义一个用于循环的变量
+	Pdata t = temp;													            //定义一个链表指针指向头结点
+	Pdata Ptemp = NULL;											          	//定义一个链表指针用于指向所要删除的结点便于删除
+
+	if (!EmptyList(temp))										          	//判断链表是否为空
+	{
+		for (i = 0; i < local - 1; i++)						    		//循环找到想要删除结点的前一个结点
+		{
+			t = t->Next;										              	//使指向它后一个结点
+		}
+
+		Ptemp = t->Next;											            //使Ptemp这个链表指针指向所要删除的结点
+
+		t->Next = Ptemp->Next;								        		//把t链表指针所指向的结点中的链表指针元素指向所要删除结点的后一个结点（也就是Ptemp->Next）
+
+		free(Ptemp);											              	//释放所要删除结点的空间
+
+		printf("删除成功!!!\n");
+	}
+	else
+	{
+		printf("删除失败!!!\n");
+	}
+
+}
+
+void BInsertList(Pdata temp, int local, int num)					//后继元素擦插入函数
+{
+	int i = 0;														                  //定义用于循环的变量
+	Pdata t = temp;												                	//定义一个链表指针指向头结点
+
+
+	if (local >= 0 && local <= LengthList(temp))			  		//根据后继结点的插入规则设置个插入位置范围判断
+	{
+		for (i = 0; i < local; i++)								          	//循环到需要插入的结点
+		{
+			t = t->Next;										                  	//把链表指针t指向下一个结点
+		}
+
+		Pdata pNew = (Pdata)malloc(sizeof(Data));				    	//新建一个链表指针，指向一个新申请的结点空间
+
+		if (pNew == NULL)											                //这条语句是用来判断空间是否分配成功的
+		{
+			printf("分配失败!!!\n");
+			exit(-1);												                    //一旦空间分配失败，就强制退出程序（exit(-1)这个函数表示程序异常退出）
+		}
+
+		pNew->data = num;									                		//把想要添加结点中的数据元素的值赋给新申请的空间中的数据元素变量
+
+		pNew->Next = t->Next;								               		//把申请空间中的链表指针指向t指针的后一个结点
+
+		t->Next = pNew;											                	//然后把t指针指向结点中的链表指针指向新的结点空间
+
+		printf("后继插入成功!!!\n");
+	}
+	else
+	{
+		printf("后继插入失败!!!\n");
+	}
+	
+}
+
+void FInsertList(Pdata temp, int local, int num)					//前驱结点插入函数
+{
+	int i = 0;														                  //设置用于循环的变量
+	Pdata t = temp;												                	//设置链表指针t指向头节点
+
+	if (local <= LengthList(temp) + 1 && local >= 1)				//根据前驱结点的插入规则设置的插入位置范围
+	{
+		for (i = 0; i < local - 1; i++)							        	//循环移动使t指针指向想要插入位置的前一个结点
+		{
+			t = t->Next;											                  //使t依次指向后一个结点
+		}
+
+		Pdata pNew = (Pdata)malloc(sizeof(Data));			    		//申请一个新的结点空间使pNew指针指向它
+
+		if (pNew == NULL)											                //判断是否申请成功
+		{
+			printf("分配失败!!!\n");
+			exit(-1);
+		}
+
+		pNew->data = num;										  	//给新的结点空间中的数据元素赋予自主设置的值
+
+		pNew->Next = t->Next;										//是新的节点空间中的链表指针元素指向原先想要插入的位置所对应的结点
+
+		t->Next = pNew;												  //接着使t指针指向的节点空间的链表指针元素指向新申请的结点空间
+
+		printf("前驱插入成功!!!\n");
+	}
+	else
+	{
+		printf("前驱插入失败!!!\n");
+	}
+}
+
+int LengthList(Pdata temp)											//判断链表长度函数
+{
+	int length = 0;													      //设置表示链表长度的变量
+	Pdata t = temp;													      //设置一个链表指针指向头结点
+
+	while (t->Next != NULL)											  //设置循环终止条件：结点中的链表指针元素所指向的空间不为空
+	{
+		length++;													          //如果满足条件累加长度变量
+		t = t->Next;										        		//使t指针指向后一个结点
+	}
+
+	return length;												       	//返回链表长度
+}
+
+bool EmptyList(Pdata temp)											//判断链表是否为空函数
+{
+	if (temp->Next == NULL)										  	//如果头结点中的链表指针元素所指向的空间不为空
+	{																              //则返回true，反之返回false
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+void TravelList(Pdata temp)											//遍历链表函数
+{
+	Pdata t = temp;													      //设置一个指针使其指向头结点
+
+	if (EmptyList(temp))										    	//判断是否为空
+	{
+		printf("此链表为空!!!\n");
+
+		return;														         //为空就结束函数
+	}
+	else
+	{
+		while (t->Next != NULL)										//设置循环结束条件：结点中的链表指针元素所指向的空间不为空
+		{
+			t = t->Next;											      //使t指向后一个结点（记住这里t原先指向的时头结点，而头节点中的数据是没有任何意义的）
+			printf("%d\t",t->data);									//输出t所指向的结点空间的数据元素的值
+		}
+	}
+
+	printf("\n");
+}
+
+Pdata CreatList(int n)												//创建链表函数
+{
+	int i = 0;														      //设置用于循环的变量
+	int num = 0;													      //设置用于存放用户输入的所要存储的数据变量
+	Pdata pTail = NULL;												  //设置一个尾结点，便于在后面插入新的结点
+	Pdata pHead = (Pdata)malloc(sizeof(Data));	//设置一个头指针，指向新申请的头节点
+
+	if (pHead == NULL)												  //判断空间是否为空
+	{
+		printf("分配失败!!!\n");
+		exit(-1);
+	}
+
+	pHead->data = 0;												    //初始化头结点，使其数据元素为0
+	pHead->Next = NULL;											 	  //使其链表指针元素指向空值
+	pTail = pHead;													    //使尾结点指向头结点
+
+	for (i = 0; i < n; i++)										  //循环用于创建用户想要的链表程度的次数
+	{
+		Pdata pNew = (Pdata)malloc(sizeof(Data));	//设置新结点指向新申请的空间
+
+		if (pNew == NULL)											    //判断空间是否分配失败
+		{
+			printf("分配失败!!!\n");
+			exit(-1);
+		}
+
+		printf("请输入第%d个结点的数值：",i+1);				
+		scanf_s("%d",&num);											//存放用户输入的数值
+
+		pNew->data = num;											  //把用户所输入的数值存入新申请的结点空间的数据元素变量中
+		pNew->Next = NULL;											//把新的结点空间中的链表指针元素变量置为空
+		pTail->Next= pNew;											//把尾结点中的链表指针元素指向新申请的结点
+		pTail = pNew;												    //使尾结点指向新申请的结点
+	}
+
+	printf("链表创建成功!!!\n");
+
+	return pHead;													    //返回头结点的地址，使主函数中的头指针指向它
+}
